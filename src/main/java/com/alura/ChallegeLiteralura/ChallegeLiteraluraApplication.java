@@ -18,6 +18,5 @@ public class ChallegeLiteraluraApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		Principal principal = new Principal(repository);
 		principal.muestraElMenu();
-
 	}
 }
