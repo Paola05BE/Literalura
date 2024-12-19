@@ -69,9 +69,6 @@ public class Autor {
         this.id = id;
     }
 
-    public Libros getLibro() {
-        return libros;
-    }
     public Integer getBirth_year() {
         return birth_year;
     }

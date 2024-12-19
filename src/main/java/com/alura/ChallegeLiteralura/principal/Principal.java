@@ -22,9 +22,11 @@ public class Principal {
     private ConvierteDatos conversor = new ConvierteDatos();
     private LibroRepository repositorio;
     private List<Autor> autor;
+
     public Principal(LibroRepository repository) {
         this.repositorio = repository;
     }
+
     public void muestraElMenu() {
         Scanner teclado = new Scanner(System.in);
         int opcion = -1; // Inicializar en un valor que no está en el rango 0-5
@@ -91,6 +93,7 @@ public class Principal {
             throw new RuntimeException("Error al codificar el nombre del libro", e);
         }
     }
+
     private DatosLibro getDatosLibro() {
         System.out.println("Escribe el nombre del libro que deseas buscar:");
         String nombreLibro = teclado.nextLine().trim();
@@ -122,9 +125,10 @@ public class Principal {
             return null; // Manejar errores de conexión o deserialización
         }
     }
+
     private void buscarLibroPorTitulo() {
         DatosLibro datos = getDatosLibro(); // Obtiene los datos del libro
-        if (datos == null){
+        if (datos == null) {
             System.out.println("No es posible encontrar resultados para el libro indicado");
             return;
         }
@@ -155,9 +159,10 @@ public class Principal {
             repositorio.save(libro);
             System.out.println(libro);
         } else {
-                System.out.println("No se pudo obtener datos del libro.");
+            System.out.println("No se pudo obtener datos del libro.");
         }
     }
+
     private void listarLibrosRegistrados() {
         List<Libros> librosGuardados = repositorio.findAll(); // Obtiene todos los libros guardados
         // Ordenar y mostrar cada libro
@@ -165,12 +170,14 @@ public class Principal {
                 .sorted(Comparator.comparing(Libros::getTitulo)) // Ordenar por título
                 .forEach(libro -> System.out.println(libro)); // Imprimir usando el método toString()
     }
+
     private void listarAutoresRegistrados() {
         List<Libros> librosGuardados = repositorio.findLibrosConAutores(); // Obtener todos los libros con sus autores
 
         // Verifica si hay libros en la lista
         if (librosGuardados.isEmpty()) {
             System.out.println("No se encontraron libros registrados.");
+            return;
         } else {
             // Usar un Map para almacenar autores y sus respectivos títulos de libros
             Map<Autor, Set<String>> autoresConLibrosMap = new HashMap<>();
@@ -180,7 +187,8 @@ public class Principal {
                 if (libro.getAutores() != null && !libro.getAutores().isEmpty()) {
                     libro.getAutores().forEach(autor -> {
                         // Obtener el conjunto de títulos para este autor, inicializar si no existe
-                        Set<String> librosPorAutor = autoresConLibrosMap.computeIfAbsent(autor, k -> new HashSet<>());
+                        Set<String> librosPorAutor = autoresConLibrosMap.computeIfAbsent(autor
+                                , k -> new HashSet<>());
                         // Agregar el título del libro al conjunto del autor (Set evita títulos repetidos)
                         librosPorAutor.add(libro.getTitulo());
                     });
@@ -201,9 +209,86 @@ public class Principal {
         }
     }
     private void listarAutoresVivos() {
-        System.out.println("Indica el año en el que deseas buscar el autor");
+        System.out.println("Indique el año en el cual desea buscar los autores vivos");
 
+        // Verificar y limpiar entradas inválidas
+        while (!teclado.hasNextInt()) {
+            System.out.println("El dato indicado es inválido. Intente nuevamente.");
+            teclado.nextLine(); // Limpia la entrada incorrecta
+            return;
+        }
+
+        // Leer un número válido
+        int anio = teclado.nextInt();
+        teclado.nextLine(); // Limpiar el búfer después de leer el número
+
+        // Lógica del método
+        List<Libros> librosGuardados = repositorio.findLibrosConAutoresVivos(anio);
+
+        if (librosGuardados.isEmpty()) {
+            System.out.println("No se encontraron libros registrados.");
+            return;
+        }
+
+        // Usar un Map para almacenar autores y sus respectivos títulos de libros
+        Map<Autor, Set<String>> autoresVivosMap = new HashMap<>();
+
+        librosGuardados.forEach(libro -> {
+            if (libro.getAutores() != null && !libro.getAutores().isEmpty()) {
+                libro.getAutores().forEach(autor -> {
+                    Set<String> librosPorAutor = autoresVivosMap.computeIfAbsent(autor,
+                            k -> new HashSet<>());
+                    librosPorAutor.add(libro.getTitulo());
+                });
+            }
+        });
+
+        // Imprimir los datos de cada autor una vez
+        autoresVivosMap.forEach((autor, titulos) -> {
+            System.out.println("------------------------------------");
+            System.out.println("Autor: " + autor.getName());
+            System.out.println("Fecha Nacimiento: " + autor.getBirth_year());
+            System.out.println("Fecha Fallecimiento: " + autor.getDeath_year());
+            System.out.println("Libros: " + String.join(", ", titulos));
+        });
+        System.out.println("------------------------------------");
     }
     private void listarLibrosPorIdioma() {
+        while (true) {
+            System.out.println("""
+                Ingresa el idioma para buscar los libros: 
+                es - Español
+                en - Inglés
+                fr - Francés
+                pt - Portugués
+                """);
+
+            var idioma = teclado.nextLine().trim(); // Captura el idioma ingresado y elimina espacios
+
+            // Verifica que el idioma ingresado sea uno de los permitidos
+            if (idioma.equals("es") || idioma.equals("en") || idioma.equals("fr") || idioma.equals("pt")) {
+                List<Libros> librosPorIdioma = repositorio.findLibrosPorIdioma(idioma);
+                if (librosPorIdioma.isEmpty()) {
+                    System.out.println("No se encontraron libros en el idioma: " + idioma);
+                } else {
+                    for (Libros libro : librosPorIdioma) {
+                        System.out.println("Título: " + libro.getTitulo());
+                        // Imprimir autores
+                        if (libro.getAutores() != null && !libro.getAutores().isEmpty()) {
+                            libro.getAutores().forEach(autor -> {
+                                System.out.println("Autor: " + autor.getName());
+                            });
+                            System.out.println("Idioma: " + libro.getIdioma());
+                            System.out.println("Numero de descargas: " + libro.getDescarga());
+                        }
+                        System.out.println("--------------------------");
+                    }
+                }
+                break;
+            } else {
+                System.out.println("Opción no válida. Por favor, ingresa un idioma correcto.");
+                break;
+            }
+        }
     }
 }

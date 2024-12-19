@@ -87,7 +87,8 @@ public class Libros {
         } else {
             sb.append("Autor: No disponible\n");
         }
-        sb.append("Idioma: ").append(idioma != null ? String.join(", ", idioma) : "No especificado").append("\n");
+        sb.append("Idioma: ").append(idioma != null ? String.join(", ", idioma)
+                : "No especificado").append("\n");
         sb.append("Número de Descargas: ").append(descarga).append("\n");
         return sb.toString();
     }

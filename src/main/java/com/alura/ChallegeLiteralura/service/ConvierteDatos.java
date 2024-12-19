@@ -16,13 +16,4 @@ public class ConvierteDatos implements IconvierteDatos {
             throw new RuntimeException(e);
         }
     }
-
-    // Método nuevo para deserializar listas
-    public <T> List<T> obtenerListaDatos(String json, Class<T> clase) {
-        try {
-            return objectMapper.readValue(json, new TypeReference<List<T>>() {});
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
