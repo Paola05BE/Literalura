@@ -1,7 +1,25 @@
 # LiterAlura 📚
 
 ## Descripción  
-**LiterAlura** es una aplicación de consola creada con **Java** y **Spring Boot** para la lógica del backend. Utiliza **PostgreSQL** para almacenar los datos y **PgAdmin** para gestionarlos. La interfaz de usuario está construida con **Bootstrap**, lo que facilitará su futura adaptación a la web. Con LiterAlura, los usuarios pueden gestionar un catálogo de libros, consultar información de autores y realizar búsquedas filtradas por idioma, título y año.
+**LiterAlura** es una aplicación de consola creada con **Java** y **Spring Boot** para la lógica del backend. Utiliza **PostgreSQL** para almacenar los datos y **PgAdmin** para gestionarlos. Esta aplicación permite a los usuarios gestionar un catálogo de libros, consultar información de autores y realizar búsquedas filtradas por idioma, título y año.  
+
+Los datos sobre libros y autores son obtenidos del servicio [Gutendex](https://gutendex.com/), una API que expone información basada en los libros disponibles en el Proyecto Gutenberg.  
+
+---
+
+## Integración con Gutendex 🌐  
+
+**Gutendex** es un servicio que permite acceder a listas y detalles de libros con varios parámetros de búsqueda como título, idioma, años de vida del autor, temas, y más.  
+
+La API devuelve datos en formato JSON, estructurados de la siguiente forma para búsquedas generales:  
+
+```json
+{
+  "count": <number>,
+  "next": <string or null>,
+  "previous": <string or null>,
+  "results": <array of Books>
+}
 
 ---
 
@@ -15,13 +33,9 @@
   - Ver todos los autores registrados.
   - Consultar qué autores estaban vivos en un año específico.
   
-- **Persistencia de datos**:
-  - Base de datos **PostgreSQL** para guardar y consultar la información.
-  - **PgAdmin** para gestionar la base de datos.
-  
-- **Interfaz adaptable**:
-  - Interfaz inicial basada en consola.
-  - Adaptación futura para interfaz web utilizando **Bootstrap**.
+- **Consumo de datos externos**:
+  - Datos obtenidos del servicio [GutenDex](https://gutendex.com/).
+  - Información guardada en la base de datos para acceso rápido y persistente.
 
 ---
 
@@ -31,7 +45,6 @@
 - **Spring Boot**: Framework para la construcción de la aplicación.
 - **PostgreSQL**: Base de datos relacional.
 - **PgAdmin**: Herramienta para la gestión de la base de datos.
-- **Bootstrap**: Framework para la futura interfaz web.
 
 ---
 
