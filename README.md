@@ -11,16 +11,6 @@ Los datos sobre libros y autores son obtenidos del servicio [Gutendex](https://g
 
 **Gutendex** es un servicio que permite acceder a listas y detalles de libros con varios parámetros de búsqueda como título, idioma, años de vida del autor, temas, y más.  
 
-La API devuelve datos en formato JSON, estructurados de la siguiente forma para búsquedas generales:  
-
-```json
-{
-  "count": <number>,
-  "next": <string or null>,
-  "previous": <string or null>,
-  "results": <array of Books>
-}
-
 ---
 
 ## Características ✨
